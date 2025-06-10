@@ -1,0 +1,8 @@
+stages:
+  pipeline:
+    cmd: make run-pipeline
+    deps:
+    - src/evaluate.py
+    - src/load_data.py
+    - src/split_dataset.py
+    - src/train.py

@@ -1,0 +1,24 @@
+schema: '2.0'
+stages:
+  pipeline:
+    cmd: make run-pipeline
+    deps:
+    - path: src/evaluate.py
+      hash: md5
+      md5: d4bae007524f346c3575bb9efb768bc4
+      size: 1236
+      isexec: true
+    - path: src/load_data.py
+      hash: md5
+      md5: fa287461ee1af78b5ba17f6809bd686a
+      size: 975
+    - path: src/split_dataset.py
+      hash: md5
+      md5: 2fe11979952e59a543e2476f8f35d20f
+      size: 604
+      isexec: true
+    - path: src/train.py
+      hash: md5
+      md5: db0c2fc7e74e3ebaedccd28cf12b4e62
+      size: 571
+      isexec: true
