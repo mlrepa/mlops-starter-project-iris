@@ -2,6 +2,7 @@ import json
 from typing import Any
 
 import joblib
+import mlflow
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix, f1_score
@@ -38,8 +39,45 @@ def evaluate_model() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
+    # Set MLflow tracking URI
+    mlflow.set_tracking_uri("http://localhost:5001")
+    mlflow.set_experiment("Iris_Classification")
+
+    # Load the parent run ID from the JSON file
+    try:
+        with open("run_id.json") as f:
+            run_data = json.load(f)
+            parent_run_id = run_data["run_id"]
+    except FileNotFoundError:
+        print("Warning: run_id.json not found. Creating a new independent run.")
+        parent_run_id = None
+
     metrics = evaluate_model()
 
     # Save metrics as JSON
     with open("data/eval.json", "w") as f:
         json.dump(metrics, f, indent=2)
+
+    with mlflow.start_run(parent_run_id=parent_run_id, nested=True) as run:
+        print(
+            f"Started evaluation run: {run.info.run_id} (nested under {parent_run_id})"
+        )
+
+        # Log metrics
+        mlflow.log_metric("f1_score", metrics["f1_score"])
+        # mlflow.log_metric(
+        #   "confusion_matrix.classes", metrics['confusion_matrix']['classes']
+        # )
+        # mlflow.log_metric(
+        #   "confusion_matrix.matrix", metrics['confusion_matrix']['matrix']
+        # )
+
+        # Log artifacts
+        mlflow.log_artifact("data/eval.json")
+        mlflow.log_artifact("data/test.csv")
+
+        # Set tags
+        mlflow.set_tag("model_type", "Model Evaluation")
+        mlflow.set_tag("dataset", "Iris")
+
+    print("Evaluation completed and metrics logged to MLflow!")
