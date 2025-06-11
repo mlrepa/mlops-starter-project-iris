@@ -1,7 +1,7 @@
 # Data files
 data/*
 !data/.gitignore
-models/*
+# models/*
 !models/.gitignore
 _template/*
 
@@ -196,3 +196,4 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+/data
