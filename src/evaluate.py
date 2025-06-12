@@ -41,7 +41,7 @@ def evaluate_model() -> dict[str, Any]:
 if __name__ == "__main__":
     # Set MLflow tracking URI
     mlflow.set_tracking_uri("http://localhost:5001")
-    mlflow.set_experiment("Iris_Classification")
+    mlflow.set_experiment("assignment-3-mlflow")
 
     # Load the parent run ID from the JSON file
     try:
@@ -65,12 +65,6 @@ if __name__ == "__main__":
 
         # Log metrics
         mlflow.log_metric("f1_score", metrics["f1_score"])
-        # mlflow.log_metric(
-        #   "confusion_matrix.classes", metrics['confusion_matrix']['classes']
-        # )
-        # mlflow.log_metric(
-        #   "confusion_matrix.matrix", metrics['confusion_matrix']['matrix']
-        # )
 
         # Log artifacts
         mlflow.log_artifact("data/eval.json")

@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     # Log the model with MLflow
     mlflow.set_tracking_uri("http://localhost:5001")
-    mlflow.set_experiment("Iris_Classification")
+    mlflow.set_experiment("assignment-3-mlflow")
     with mlflow.start_run() as run:
         # Save run ID in json file
         print(f"Logging run with ID: {run.info.run_id}")
@@ -43,8 +43,6 @@ if __name__ == "__main__":
 
         # Log metrics
         mlflow.log_metric("f1_score", f1)
-        # mlflow.log_metric("confusion_matrix.classes", classes)
-        # mlflow.log_metric("confusion_matrix.matrix", cm.tolist())
 
         # Log artifacts
         mlflow.log_artifact("data/features_iris.csv")
