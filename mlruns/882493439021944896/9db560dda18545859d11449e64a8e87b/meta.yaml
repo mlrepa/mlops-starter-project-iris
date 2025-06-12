@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/kerel/mlops-starter-project-iris/mlruns/882493439021944896/9db560dda18545859d11449e64a8e87b/artifacts
+end_time: 1749704018165
+entry_point_name: ''
+experiment_id: '882493439021944896'
+lifecycle_stage: active
+run_id: 9db560dda18545859d11449e64a8e87b
+run_name: training-step
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1749704004356
+status: 3
+tags: []
+user_id: kerel

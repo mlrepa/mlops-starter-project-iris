@@ -1,0 +1,31 @@
+artifact_path: file:///C:/Users/kerel/mlops-starter-project-iris/mlruns/882493439021944896/models/m-1668d1e807fc41d1a4735fd316e86cf6/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.0
+is_signature_from_type_hint: false
+mlflow_version: 3.1.0
+model_id: m-1668d1e807fc41d1a4735fd316e86cf6
+model_size_bytes: 968
+model_uuid: m-1668d1e807fc41d1a4735fd316e86cf6
+prompts: null
+run_id: 5077a05b2b354343b224fc7a9cef0581
+signature:
+  inputs: '[{"type": "double", "name": "sepal_length", "required": true}, {"type":
+    "double", "name": "sepal_width", "required": true}, {"type": "double", "name":
+    "petal_length", "required": true}, {"type": "double", "name": "petal_width", "required":
+    true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float32", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-06-12 05:06:47.543864'

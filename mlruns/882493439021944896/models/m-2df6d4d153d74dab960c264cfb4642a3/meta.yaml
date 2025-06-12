@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/kerel/mlops-starter-project-iris/mlruns/882493439021944896/models/m-2df6d4d153d74dab960c264cfb4642a3/artifacts
+creation_timestamp: 1749704004651
+experiment_id: '882493439021944896'
+last_updated_timestamp: 1749704018050
+model_id: m-2df6d4d153d74dab960c264cfb4642a3
+model_type: null
+name: model
+source_run_id: 9db560dda18545859d11449e64a8e87b
+status: 2
+status_message: null

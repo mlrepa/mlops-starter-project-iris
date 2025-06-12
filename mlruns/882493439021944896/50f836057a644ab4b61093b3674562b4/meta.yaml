@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/kerel/mlops-starter-project-iris/mlruns/882493439021944896/50f836057a644ab4b61093b3674562b4/artifacts
+end_time: 1749704018169
+entry_point_name: ''
+experiment_id: '882493439021944896'
+lifecycle_stage: active
+run_id: 50f836057a644ab4b61093b3674562b4
+run_name: train
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1749704004226
+status: 3
+tags: []
+user_id: kerel

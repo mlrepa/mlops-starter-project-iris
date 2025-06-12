@@ -1,45 +1,36 @@
 import json
-from typing import Any
-
 import joblib
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix, f1_score
+import mlflow
 
-
-def evaluate_model() -> dict[str, Any]:
-    """Evaluate the trained model and return metrics.
-
-    Returns:
-        Dictionary containing evaluation metrics
-    """
-    # Load unique classes from the original features file
-    classes = pd.read_csv("data/features_iris.csv")["target"].unique().tolist()
-
-    # Load test dataset
+def evaluate_model():
+    # Load test set
     test_dataset = pd.read_csv("data/test.csv")
-    y: np.ndarray = test_dataset.loc[:, "target"].values.astype("float32")
-    X: np.ndarray = test_dataset.drop("target", axis=1).values
+    y = test_dataset["target"].values.astype("float32")
+    X = test_dataset.drop("target", axis=1)
 
-    # Load trained model
+    # Load model
     clf = joblib.load("models/model.joblib")
 
-    # Make predictions
-    prediction: np.ndarray = clf.predict(X)
+    # Predict
+    y_pred = clf.predict(X)
 
-    # Calculate metrics
-    cm: np.ndarray = confusion_matrix(y, prediction)
-    f1: float = f1_score(y_true=y, y_pred=prediction, average="macro")
+    # Evaluate
+    f1 = f1_score(y, y_pred, average="macro")
+    cm = confusion_matrix(y, y_pred)
 
-    return {
-        "f1_score": f1,
-        "confusion_matrix": {"classes": classes, "matrix": cm.tolist()},
-    }
-
+    return f1, cm.tolist()
 
 if __name__ == "__main__":
-    metrics = evaluate_model()
+    with mlflow.start_run(run_name="evaluation", nested=True):
+        f1, cm = evaluate_model()
 
-    # Save metrics as JSON
-    with open("data/eval.json", "w") as f:
-        json.dump(metrics, f, indent=2)
+        # Log evaluation metrics
+        mlflow.log_metric("f1_score", f1)
+
+        # Optionally log confusion matrix as artifact
+        with open("data/eval.json", "w") as f:
+            json.dump({"f1_score": f1, "confusion_matrix": cm}, f, indent=2)
+        mlflow.log_artifact("data/eval.json")
