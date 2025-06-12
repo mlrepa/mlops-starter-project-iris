@@ -2,17 +2,18 @@ import json
 from typing import Any
 
 import joblib
+import mlflow
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix, f1_score
 
+mlflow.set_tracking_uri("http://127.0.0.1:5001")
+mlflow.set_experiment("assignment-3-mlflow")
+
 
 def evaluate_model() -> dict[str, Any]:
-    """Evaluate the trained model and return metrics.
+    """Evaluate the trained model and return metrics."""
 
-    Returns:
-        Dictionary containing evaluation metrics
-    """
     # Load unique classes from the original features file
     classes = pd.read_csv("data/features_iris.csv")["target"].unique().tolist()
 
@@ -38,8 +39,12 @@ def evaluate_model() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    metrics = evaluate_model()
+    with mlflow.start_run(run_name="evaluation", nested=True):
+        metrics = evaluate_model()
 
-    # Save metrics as JSON
-    with open("data/eval.json", "w") as f:
-        json.dump(metrics, f, indent=2)
+        mlflow.log_metric("eval_f1_score", metrics["f1_score"])
+
+        with open("data/eval.json", "w") as f:
+            json.dump(metrics, f, indent=2)
+
+        mlflow.log_artifact("data/eval.json")

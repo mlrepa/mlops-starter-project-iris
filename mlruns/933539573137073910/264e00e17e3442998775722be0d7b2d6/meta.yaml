@@ -1,0 +1,14 @@
+artifact_uri: mlflow-artifacts:/933539573137073910/264e00e17e3442998775722be0d7b2d6/artifacts
+end_time: 1749698144337
+entry_point_name: ''
+experiment_id: '933539573137073910'
+lifecycle_stage: active
+run_id: 264e00e17e3442998775722be0d7b2d6
+run_name: training
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1749698144285
+status: 3
+tags: []
+user_id: plinphon
