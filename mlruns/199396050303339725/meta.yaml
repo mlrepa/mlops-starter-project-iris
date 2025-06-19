@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/199396050303339725
+creation_time: 1750256253444
+experiment_id: '199396050303339725'
+last_update_time: 1750256253444
+lifecycle_stage: active
+name: 5-genai-with-mlflow-3
