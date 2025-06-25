@@ -75,3 +75,23 @@ run-pipeline: ## Run the complete ML pipeline
 	python src/split_dataset.py --test_size 0.2
 	python src/train.py
 	python src/evaluate.py
+
+run-train: ## Run the training pipeline only
+	@echo "Running training pipeline..."
+	@echo "Loading data, splitting dataset, and training model..."
+	@echo "This will run the following commands:"
+	@echo "1. Load data"
+	@echo "2. Split dataset"
+	@echo "3. Train model"
+	@echo "You can also run 'make run-pipeline' to execute the entire ML pipeline."
+	python src/load_data.py
+	python src/split_dataset.py --test_size 0.2
+	python src/train.py
+
+run-evaluation: ## Run the evaluation pipeline only
+	@echo "Running evaluation pipeline..."
+	@echo "Evaluating model..."
+	@echo "This will run the following command:"
+	@echo "1. Evaluate model"
+	@echo "You can also run 'make run-pipeline' to execute the entire ML pipeline."
+	python src/evaluate.py

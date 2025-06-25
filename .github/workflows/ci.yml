@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -14,21 +14,90 @@ jobs:
         python-version: ["3.11", "3.12"]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-      with:
-        version: "latest"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
 
-    - name: Set up Python ${{ matrix.python-version }}
-      run: uv python install ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: make install
+      - name: Install dependencies
+        run: make install
 
-    - name: Run code quality checks (Linting, Formatting Check, Type Check, Pre-commit hooks)
-      run: make check-all
+      - name: Run code quality checks (Linting, Formatting Check, Type Check, Pre-commit hooks)
+        run: make check-all
 
-    - name: Run tests with coverage
-      run: make test-cov
+      - name: Run tests with coverage
+        run: make test-cov
+
+  train-model:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Train model
+        run: make run-train
+
+      - name: Upload trained model artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iris-model
+          path: models/model.joblib
+
+  evaluate-model:
+    runs-on: ubuntu-latest
+    needs: train-model
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Download trained model artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: iris-model
+          path: models/
+
+      - name: Verify model file exists
+        run: test -f models/model.joblib
+
+      - name: Evaluate model
+        run: make run-evaluation
+
+      - name: Upload evaluation metrics artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluation-metrics
+          path: data/eval.json
