@@ -1,6 +1,6 @@
 name: CI
 
-oon:
+on:
   push:
     branches: [ main, dev, assignment-8-cicd ]
   pull_request:
