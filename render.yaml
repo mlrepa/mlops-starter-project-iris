@@ -1,0 +1,28 @@
+services:
+  # FastAPI Backend Service
+  - type: web
+    name: iris-api
+    runtime: docker
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.6
+
+  # Streamlit Frontend Service
+  - type: web
+    name: iris-ui
+    runtime: docker
+    dockerfilePath: ./ui/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.6
+      - key: API_URL
+        fromService:
+          type: web
+          name: iris-api
+          property: url

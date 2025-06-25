@@ -26,6 +26,22 @@ dev = [
     "detect-secrets>=1.5.0",
 ]
 
+# Dependencies for the FastAPI backend service
+# Install with: uv sync --group api
+api = [
+    "fastapi>=0.104.1",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+]
+
+# Dependencies for the Streamlit frontend service
+# Install with: uv sync --group ui
+ui = [
+    "streamlit>=1.28.1",
+    "requests>=2.31.0",
+    "plotly>=5.17.0",
+]
+
 [tool.ruff]
 # Ruff is a super-fast Python linter and formatter.
 line-length = 88  # Max characters per line (like Black's default)
@@ -55,7 +71,7 @@ warn_unused_configs = true     # Warn about unused Mypy settings
 disallow_untyped_defs = true   # Require type hints for function definitions
 disallow_incomplete_defs = true # Require all parts of a function signature to be typed
 check_untyped_defs = true      # Still type check the body of untyped functions
-disallow_untyped_decorators = true # Require decorators to be typed
+disallow_untyped_decorators = false # Allow untyped decorators (e.g., FastAPI)
 no_implicit_optional = true    # Make 'Optional[T]' explicit (no 'T' implying 'T | None')
 warn_redundant_casts = true    # Warn if a type cast is unnecessary
 warn_unused_ignores = true     # Warn about '# type: ignore' comments that are no longer needed

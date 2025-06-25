@@ -1,4 +1,4 @@
-.PHONY: help install test lint format clean run-pipeline
+.PHONY: help install test lint format clean run-pipeline deploy-local test-deployment deploy-render validate-docker
 CODE_DIRS = src/ tests/
 
 help: ## Show this help message
@@ -75,3 +75,40 @@ run-pipeline: ## Run the complete ML pipeline
 	python src/split_dataset.py --test_size 0.2
 	python src/train.py
 	python src/evaluate.py
+
+deploy-local: ## Deploy application locally using Docker
+	@echo "Deploying application locally..."
+	chmod +x scripts/deploy_local.sh
+	./scripts/deploy_local.sh
+
+test-deployment: ## Test the deployed application
+	@echo "Testing deployed application..."
+	chmod +x scripts/test_deployment.sh
+	./scripts/test_deployment.sh
+
+deploy-render: ## Deploy application to Render
+	@echo "Deploying application to Render..."
+	chmod +x scripts/deploy_render.sh
+	./scripts/deploy_render.sh
+
+docker-build: ## Build Docker images locally
+	@echo "Building Docker images..."
+	docker build -f api/Dockerfile -t iris-api:latest .
+	docker build -f ui/Dockerfile -t iris-ui:latest .
+
+docker-up: ## Start Docker containers locally
+	@echo "Starting Docker containers..."
+	docker-compose -f docker-compose.local.yml up -d
+
+docker-down: ## Stop Docker containers
+	@echo "Stopping Docker containers..."
+	docker-compose -f docker-compose.local.yml down
+
+docker-logs: ## View Docker container logs
+	@echo "Viewing Docker logs..."
+	docker-compose -f docker-compose.local.yml logs -f
+
+validate-docker: ## Validate Docker builds without deployment
+	@echo "Validating Docker builds..."
+	chmod +x scripts/validate_docker.sh
+	./scripts/validate_docker.sh
