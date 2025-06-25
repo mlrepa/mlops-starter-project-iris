@@ -1,10 +1,10 @@
 name: CI
 
-on:
+oon:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, assignment-8-cicd ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, assignment-8-cicd ]
 
 jobs:
   test:
