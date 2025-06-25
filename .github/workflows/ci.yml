@@ -2,9 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, deployment ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -32,3 +33,74 @@ jobs:
 
     - name: Run tests with coverage
       run: make test-cov
+
+  train-model:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+
+    - name: Set up Python
+      run: uv python install 3.11
+
+    - name: Install dependencies
+      run: make install
+
+    - name: Download & preprocess data
+      run: |
+        uv run python src/load_data.py
+        uv run python src/split_dataset.py --test_size 0.2
+
+    - name: Run training script
+      run: uv run python src/train.py
+
+    - name: Upload model artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: iris-model
+        path: models/model.joblib
+
+  evaluate-model:
+    runs-on: ubuntu-latest
+    needs: train-model
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+
+    - name: Set up Python
+      run: uv python install 3.11
+
+    - name: Install dependencies
+      run: make install
+
+    - name: Download iris-model artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: iris-model
+        path: models/
+
+    - name: Verify model file exists
+      run: |
+        if [ ! -f "models/model.joblib" ]; then
+          echo "Error: model.joblib not found in models/ directory"
+          exit 1
+        fi
+        echo "Model file verified: models/model.joblib exists"
+
+    - name: Run evaluation script
+      run: uv run python src/evaluate.py
+
+    - name: Upload evaluation metrics
+      uses: actions/upload-artifact@v4
+      with:
+        name: evaluation-metrics
+        path: data/eval.json
