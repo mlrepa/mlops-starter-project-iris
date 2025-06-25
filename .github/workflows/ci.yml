@@ -32,3 +32,72 @@ jobs:
 
     - name: Run tests with coverage
       run: make test-cov
+
+  train-model:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: make install
+
+    - name: Download data
+      run: python src/load_data.py
+
+    - name: Preprocessing
+      run: python src/split_dataset.py --test_size 0.2
+
+    - name: Train model
+      run: python src/train.py
+
+    - name: Upload trained model
+      uses: actions/upload-artifact@v4
+      with:
+        name: iris-model
+        path: models/model.joblib
+
+  evaluate-model:
+    needs: train-model
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+      version: "latest"
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: make install
+
+    - name: Download trained model
+      uses: actions/download-artifact@v4
+      with:
+        name: iris-model
+        path: models/
+
+    - name: Verify model exists
+      run: ls -lh models/model.joblib
+
+    - name: Evaluate model
+      run: python src/evaluate.py
+
+    - name: Upload evaluation metrics
+      uses: actions/upload-artifact@v4
+      with:
+        name: evaluation-metrics
+        path: data/eval.json
